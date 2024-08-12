@@ -1,0 +1,68 @@
+1.
+Explanation:
+user_id 362 gave a 3-star review, and so did user_id 192.
+
+SELECT user_id, stars
+FROM reviews
+WHERE stars = 3;
+
+------------------------------------------------------------
+
+2.
+Explanation:
+Based on the example output, there are two users who posted only one tweet in 2022, and one user who posted two tweets in 2022. 
+The query groups the users by the number of tweets they posted and displays the number of users in each group.
+The dataset you are querying against may have different input & output - this is just an example!
+
+SELECT tweet_count_per_user AS tweet_bucket, 
+COUNT(user_id) AS users_num 
+FROM (
+  SELECT 
+    user_id, 
+    COUNT(tweet_id) AS tweet_count_per_user 
+  FROM tweets 
+  WHERE tweet_date BETWEEN '2022-01-01' 
+    AND '2022-12-31'
+  GROUP BY user_id) AS total_tweets 
+GROUP BY tweet_count_per_user;
+
+----------------------------------------------------------------
+
+3.
+Explanation:
+The bumpers in step 3 and 4 are the only item that remains unfinished as it lacks a recorded finish date.
+
+SELECT part, assembly_step
+FROM parts_assembly
+WHERE finish_date IS NULL;
+
+-----------------------------------------------------------------
+
+4.
+Write a query to identify the top 2 Power Users who sent the highest number of messages on Microsoft Teams in August 2022. 
+Display the IDs of these 2 users along with the total number of messages they sent. Output the results in descending order based on the count of the messages.
+
+Assumption:
+No two users have sent the same number of messages in August 2022.
+
+SELECT 
+  sender_id,
+  COUNT(message_id) AS count_messages
+FROM messages
+WHERE EXTRACT(MONTH FROM sent_date) = '8'
+  AND EXTRACT(YEAR FROM sent_date) = '2022'
+GROUP BY sender_id
+ORDER BY count_messages DESC
+LIMIT 2; 
+
+--------------------------------------------------------------
+
+5.
+Assume you're given two tables containing data about Facebook Pages and their respective likes (as in "Like a Facebook Page").
+Write a query to return the IDs of the Facebook pages that have zero likes. The output should be sorted in ascending order based on the page IDs.
+
+SELECT pages.page_id
+FROM pages
+LEFT OUTER JOIN page_likes AS likes
+  ON pages.page_id = likes.page_id
+WHERE likes.page_id IS NULL;
